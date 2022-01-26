@@ -7,16 +7,28 @@
     <groupId>org.afundacion</groupId>
     <artifactId>workapop</artifactId>
     <version>v0.1</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.afundacion</groupId>
+            <artifactId>workapop</artifactId>
+            <version>v0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.6.4.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.43</version>
+        </dependency>
+    </dependencies>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
-    <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-core</artifactId>
-        <version>5.6.4.Final</version>
-    </dependency>
 
 </project>
