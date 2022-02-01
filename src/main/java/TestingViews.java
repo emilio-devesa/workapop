@@ -1,24 +1,40 @@
-
 import org.hibernate.query.Query;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class TestingViews {
 
+    private ArrayList<Empleado> empleados;
+    private Scanner scanner = new Scanner(System.in);
+
     /**
-     * Crea una query manejada por HibernateUtil para solicitar un ArrayList con todos los "empleados" de la base de datos.
-     * @return Devuelve el ArrayList solicitado.
+     * En caso de que no se hayan cargado todavía los datos de Empleado de la base de datos los solicitará.
+     * Si ya existen datos cargados preguntará si se desean actualizar, en caso afirmativo borrará los datos actuales y volverá a solicitarlos.
      */
-    public ArrayList<Empleado> obtenerEmpleados(){
-        Query query = (Query) HibernateUtil.getCurrentSession().createQuery("FROM EMP");
-        ArrayList<Empleado> empleados = (ArrayList<Empleado>) query.list();
-        return empleados;
+    private void cargarEmpleados(){
+        if (empleados == null) {
+            System.out.println("Solicitando datos de empleados...");
+            Query query = (Query) HibernateUtil.getCurrentSession().createQuery("FROM EMP");
+            ArrayList<Empleado> creandoEmpleados = (ArrayList<Empleado>) query.list();
+            empleados = creandoEmpleados;
+            System.out.println("Los se han obtenido exitosamente.");
+        }else{
+            System.out.println("Ya existen datos cargados, quieres actualizarlos? ('si' para confirmar)");
+            if(scanner.nextLine().equalsIgnoreCase("si")){
+                empleados = null;
+                cargarEmpleados();
+            }else{
+                System.out.println("Procediendo a mostrar los datos...");
+            }
+
+        }
     }
 
     /**
      * Crea una query manejada por HibernateUtil para solicitar un ArrayList con todos los "departamentos" de la base de datos.
      * @return Devuelve el ArrayList solicitado.
      */
-    public ArrayList<Departamento> obtenerDepartamentos(){
+    public ArrayList<Departamento> cargarDepartamentos(){
         Query query = (Query) HibernateUtil.getCurrentSession().createQuery("FROM DEPT");
         ArrayList<Departamento> departamentos = (ArrayList<Departamento>) query.list();
         return departamentos;
@@ -48,8 +64,12 @@ public class TestingViews {
         System.out.print(departamento.getLoc()+"  ");
     }
 
+    /**
+     * Llama a obtenerEmpleados() para conseguir un arrayList de la clase Empleado que ira mostrando en pantalla
+     * mediante repetidas llamadas a verSoloEmpleado().
+     */
     public void verEmpleados(){
-        ArrayList<Empleado> empleados = obtenerEmpleados();
+        cargarEmpleados();
         System.out.println("************************************************************************************************************");
         System.out.println();
         System.out.println("Número    Nombre    Trabajo    Trabaja para    Data de contratación    Salario    Comm    Departamento");
@@ -58,13 +78,28 @@ public class TestingViews {
         }
 
     }
+
+    /**
+     * Llama a obtenerDepartamentos() para conseguir un arrayList de la clase Departamento que ira mostrando en pantalla
+     * mediante repetidas llamadas a verSoloDepartamento().
+     */
     public void verDepartamentos(){
-        ArrayList<Departamento> departamento = obtenerDepartamentos();
+        ArrayList<Departamento> departamento = cargarDepartamentos();
         System.out.println("************************************************************************************************************");
         System.out.println();
         System.out.println("Número    Nombre    Localización");
         for(int i=0; i<departamento.size(); i++){
             verSoloDepartamento(departamento.get(i));
         }
+    }
+
+    public void mostrarRelacionJefesEmpleados(){
+        cargarEmpleados();
+        int numEmpleado = 0;
+        System.out.println("A continuación se irán mostrando la relación empleado-jefe a modo de árbol.");
+        System.out.println("Puede irse moviendo por él introduciendo los números de los empleados.");
+        do{
+
+        }while(numEmpleado != 0);;
     }
 }
