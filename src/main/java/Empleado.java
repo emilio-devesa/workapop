@@ -8,12 +8,12 @@ public class Empleado {
     private int empno;
     private String ename;
     private String job;
-    private Departamento mgr;
+    private int mgr;
     private String hiredate;
     private double sal;
     private Departamento deptno;
 
-    public Empleado(int empno, String ename, String job, Departamento mgr, String hiredate, double sal, double comm, Departamento deptno) {
+    public Empleado(int empno, String ename, String job, int mgr, String hiredate, double sal, double comm, Departamento deptno) {
         this.empno = empno;
         this.ename = ename;
         this.job = job;
@@ -35,7 +35,7 @@ public class Empleado {
         return job;
     }
 
-    public Departamento getMgr() {
+    public int getMgr() {
         return mgr;
     }
 
@@ -63,7 +63,7 @@ public class Empleado {
         this.job = job;
     }
 
-    public void setMgr(Departamento mgr) {
+    public void setMgr(int mgr) {
         this.mgr = mgr;
     }
 
