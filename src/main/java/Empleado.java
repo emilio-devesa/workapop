@@ -6,17 +6,15 @@ public class Empleado {
     private Integer mgr;
     private String hiredate;
     private double sal;
-    private double comm;
     private Departamento deptno;
 
-    public Empleado(int empno, String ename, String job, Integer mgr, String hiredate, double sal, double comm, Departamento deptno) {
+    public Empleado(int empno, String ename, String job, Integer mgr, String hiredate, double sal, Departamento deptno) {
         this.empno = empno;
         this.ename = ename;
         this.job = job;
         this.mgr = mgr;
         this.hiredate = hiredate;
         this.sal = sal;
-        this.comm = comm;
         this.deptno = deptno;
     }
 
@@ -42,10 +40,6 @@ public class Empleado {
 
     public double getSal() {
         return sal;
-    }
-
-    public double getComm() {
-        return comm;
     }
 
     public Departamento getDeptno() {
@@ -74,10 +68,6 @@ public class Empleado {
 
     public void setSal(double sal) {
         this.sal = sal;
-    }
-
-    public void setComm(double comm) {
-        this.comm = comm;
     }
 
     public void setDeptno(Departamento deptno) {

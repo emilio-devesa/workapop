@@ -3,7 +3,10 @@ import org.hibernate.query.Query;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class TestingViews {
+
+    final String indiceEmpleado = "Número    Nombre    Trabajo    Trabaja para    Data de contratación    Salario    Departamento";
 
     private ArrayList<Empleado> empleados;
     private final Scanner scanner = new Scanner(System.in);
@@ -52,7 +55,6 @@ public class TestingViews {
         System.out.print(empleado.getMgr() + " ");
         System.out.print(empleado.getHiredate() + " ");
         System.out.print(empleado.getSal() + " ");
-        System.out.print(empleado.getComm() + " ");
         System.out.print(empleado.getDeptno() + " ");
     }
 
@@ -75,7 +77,7 @@ public class TestingViews {
         cargarEmpleados();
         System.out.println("************************************************************************************************************");
         System.out.println();
-        System.out.println("Número    Nombre    Trabajo    Trabaja para    Data de contratación    Salario    Comm    Departamento");
+        System.out.println(indiceEmpleado);
         for (Empleado empleado : empleados) {
             verSoloEmpleado(empleado);
         }
@@ -96,13 +98,24 @@ public class TestingViews {
         }
     }
 
+    //Todos los métodos siguientes sirven para gestionar mostrarRelacionJefeEmpleado()
+
+    /**
+     * Submenu que deja al usuario irse "posicionando" en los empleados para ir mostrando su jefe
+     * o empleados de los que esta a cargo. Una vez mostrado una de las opciónes se posicionará en un nuevo
+     * ya sea el jefe o una de las personas que tiene a cargo el empleado en el que estaba posicionado.
+     * Este método trata de dejar al usuario ver la relación de empleado-jefe movimiendose por un
+     * "esquema en arból".
+     * Esto realmente no almacena los datos de ningúna manera especial, tan solo simula hacerlo de modo que es bastante
+     * ineficiente en cuanto al procesamiento de estos y no sería factible si la base de datos constase de un gran tamaño.
+     */
     public void mostrarRelacionJefeEmpleados() {
         cargarEmpleados();
         ArrayList<Empleado> auxEmpleados = empleados;
         Empleado empleadoActual;
         int option = 0;
         System.out.println("A continuación se irán mostrando la relación empleado-jefe a modo de árbol.");
-        System.out.println("Puede irse moviendo por él introduciendo los números de los empleados.");
+        System.out.println("Puede irse moviendo por él introduciendo una de las opciónes o saltando directamente a un empleado concreto.");
 
         verEmpleados();
         //Posicionando empleado inicial.
@@ -112,6 +125,7 @@ public class TestingViews {
         }while(empleadoActual!=null);
 
         //Trabajando con el árbol de empleados
+        //Aunque se denomine arbol el usuario puede introducir cualquier id y posicionarse en esta.
         do {
             System.out.println("Empleado actual: ");
             System.out.println(empleadoActual.getEname());
@@ -120,6 +134,8 @@ public class TestingViews {
             System.out.println("1. Mostrar jefe.");
             System.out.println("2. Mostrar empleados.");
             System.out.println("3. Salir");
+            System.out.println();
+            System.out.println("Introduzca una opción: ");
 
 
 
@@ -129,7 +145,7 @@ public class TestingViews {
                     empleadoActual = buscarJefeDe(empleadoActual);
                     break;
                 case 2:
-                    buscarEmpleadosDe(empleadoActual);
+                    empleadoActual = buscarEmpleadosDe(empleadoActual);
                     break;
                 case 3:
                     System.out.println("Tenga un buen día!");
@@ -148,7 +164,7 @@ public class TestingViews {
             for (Empleado value : empleados) {
                 if (value.getEmpno() == empleado.getMgr()) {
                     System.out.println("Busqueda exitosa!");
-                    System.out.println("Número    Nombre    Trabajo    Trabaja para    Data de contratación    Salario    Comm    Departamento");
+                    System.out.println(indiceEmpleado);
                     verSoloEmpleado(value);
                     return value;
                 }
@@ -158,18 +174,30 @@ public class TestingViews {
         return empleado;
     }
 
-    private ArrayList<Empleado> buscarEmpleadosDe(Empleado jefe) {
+    private Empleado buscarEmpleadosDe(Empleado jefe) {
+        ArrayList<Empleado> listaEmpleados = null;
+        Empleado empleadoDevuelto = jefe; //Empleado devuelto de la lista obtenida, será en el que se posicione el usuario.
+        boolean bool;
         System.out.println("Buscando empleados de: " + jefe.getEmpno());
-        ArrayList<Empleado> empleadosDevueltos = null;
+        System.out.println(indiceEmpleado);
         for (Empleado empleado : empleados) {
-            System.out.println("Número    Nombre    Trabajo    Trabaja para    Data de contratación    Salario    Comm    Departamento");
             if (jefe.getEmpno() == empleado.getMgr()) {
-                empleadosDevueltos.add(empleado);
+                listaEmpleados.add(empleado);
             }
+            System.out.println();
+            System.out.println("Introduzca el número del empleado en el que desea posicionarse: ");
         }
 
-        return empleadosDevueltos;
-
+        do{
+            bool = false;
+            try {
+                empleadoDevuelto = listaEmpleados.get(scanner.nextInt());
+            }catch(Exception e){
+                System.out.println("Introduzca un número valido");
+                bool = true;
+            }
+        }while(bool);
+        return empleadoDevuelto;
     }
 
     private Empleado buscarEmpleadoPorNumero(int NoEmpleado) {
