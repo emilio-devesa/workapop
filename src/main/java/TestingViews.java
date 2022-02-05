@@ -133,11 +133,10 @@ public class TestingViews {
             System.out.println("Que desea hacer?");
             System.out.println("1. Mostrar jefe.");
             System.out.println("2. Mostrar empleados.");
-            System.out.println("3. Salir");
+            System.out.println("3. Posicionarse en otro usuario");
+            System.out.println("4. Salir");
             System.out.println();
             System.out.println("Introduzca una opción: ");
-
-
 
             switch (scanner.nextInt()){
                 case 1:
@@ -148,16 +147,28 @@ public class TestingViews {
                     empleadoActual = buscarEmpleadosDe(empleadoActual);
                     break;
                 case 3:
+                    do {
+                        System.out.print("Introduzca el número de algún empleado: ");
+                        empleadoActual = buscarEmpleadoPorNumero(scanner.nextInt());
+                    }while(empleadoActual!=null);
+                    break;
+                case 4:
                     System.out.println("Tenga un buen día!");
+                    empleadoActual = null;
                     break;
                 default:
                     System.out.println("Introduzca una opción válida");
                     break;
             }
-
-        }while (option != 3);
+        }while (empleadoActual != null);
     }
 
+    /**
+     * Consulta la relación de los empleados para devolver el "jefe" del "empleado" pasado como parámetro, de momento es solo
+     * llamado dentro del método mostrarRelacionJefeEmpleado().
+     * @param empleado instancia de la clase Empleado, hace referencia al empleadoActual del método mostrarRelacionJefeEmpleado().
+     * @return Devoverá el "jefe" del "empleado" pásado como parámetro o, en caso de no existir este, el propio parámetro introducido de nuevo.
+     */
     private Empleado buscarJefeDe(Empleado empleado) {
         System.out.println("Buscando Jefe del empleado: " + empleado.getEname());
         if(empleado.getMgr() != null) {
@@ -173,21 +184,32 @@ public class TestingViews {
         System.out.println("No se puede realizar esta acción.");
         return empleado;
     }
-
+    /**
+     * Consulta la relación de los empleados para devolver los empleados del "jefe" pasado como parámetro, de momento es solo
+     * llamado dentro del método mostrarRelacionJefeEmpleado().
+     * @param jefe instancia de la clase Empleado, hace referencia al empleadoActual del método mostrarRelacionJefeEmpleado().
+     * @return Devolverá un empleado elegido por el usuario de entre todos de los que el "jefe está a cargo".
+     */
     private Empleado buscarEmpleadosDe(Empleado jefe) {
         ArrayList<Empleado> listaEmpleados = null;
         Empleado empleadoDevuelto = jefe; //Empleado devuelto de la lista obtenida, será en el que se posicione el usuario.
         boolean bool;
         System.out.println("Buscando empleados de: " + jefe.getEmpno());
+        System.out.print("   "); //Meramente decorativo
         System.out.println(indiceEmpleado);
+
+        //Lista todos los empleados del "jefe"
         for (Empleado empleado : empleados) {
             if (jefe.getEmpno() == empleado.getMgr()) {
                 listaEmpleados.add(empleado);
+                System.out.println((listaEmpleados.indexOf(empleado)+1)+")");
+                verSoloEmpleado(empleado);
             }
             System.out.println();
-            System.out.println("Introduzca el número del empleado en el que desea posicionarse: ");
+            System.out.println("Introduzca la opción del empleado en el que desea posicionarse: ");
         }
 
+        //Solicita al usuario posicionarse en uno de los empleados.
         do{
             bool = false;
             try {
@@ -200,6 +222,11 @@ public class TestingViews {
         return empleadoDevuelto;
     }
 
+    /**
+     * Busca y retorna a un empleado de la lista empleados.
+     * @param NoEmpleado número único de cada empleado para identificarlo.
+     * @return Devuelve una instancia de la clase Empleado.
+     */
     private Empleado buscarEmpleadoPorNumero(int NoEmpleado) {
         System.out.println("Buscando al empleado número: " + NoEmpleado);
         for (Empleado empleado : empleados) {
