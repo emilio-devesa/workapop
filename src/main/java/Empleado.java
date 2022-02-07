@@ -1,11 +1,27 @@
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+
+@Table(name = "EMP", catalog = "worka-pop")
 public class Empleado {
 
+    @Id
+    @Column(name="EMPNO")
     private int empno;
+    @Column(name="ENAME")
     private String ename;
+    @Column(name="JOB")
     private String job;
+    @Column(name="MGR")
     private Integer mgr;
+    @Column(name="HIREDATE")
     private String hiredate;
+    @Column(name="SAL")
     private double sal;
+    @Column(name="DEPTNO")
     private Departamento deptno;
 
     public Empleado(int empno, String ename, String job, Integer mgr, String hiredate, double sal, Departamento deptno) {
