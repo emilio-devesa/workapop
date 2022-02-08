@@ -1,6 +1,8 @@
 
 import org.hibernate.query.Query;
 import java.util.ArrayList;
+import database.Empleado;
+import database.Departamento;
 
 public class TestingViews {
 
@@ -35,7 +37,6 @@ public class TestingViews {
         System.out.print(empleado.getMgr()+" ");
         System.out.print(empleado.getHiredate()+" ");
         System.out.print(empleado.getSal()+" ");
-        System.out.print(empleado.getComm()+" ");
         System.out.print(empleado.getDeptno()+" ");
     }
     /**
@@ -52,7 +53,7 @@ public class TestingViews {
         ArrayList<Empleado> empleados = obtenerEmpleados();
         System.out.println("************************************************************************************************************");
         System.out.println();
-        System.out.println("Número    Nombre    Trabajo    Trabaja para    Data de contratación    Salario    Comm    Departamento");
+        System.out.println("Número    Nombre    Trabajo    Trabaja para    Data de contratación    Salario    Departamento");
         for(int i=0; i<empleados.size(); i++){
             verSoloEmpleado(empleados.get(i));
         }

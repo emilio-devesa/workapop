@@ -1,3 +1,4 @@
+import database.Empleado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -31,8 +32,8 @@ public class HibernateUtil {
         configuration.setProperties(settings);
         configuration.configure();
         // Se registran las clases que hay que mapear con cada tabla de la base de datos
-        // configuration.addAnnotatedClass(Clase1.class);
-        // configuration.addAnnotatedClass(Clase2.class);
+        configuration.addAnnotatedClass(Empleado.class);
+        //configuration.addAnnotatedClass(Departamento.class);
         // configuration.addAnnotatedClass(Clase3.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
@@ -70,4 +71,14 @@ public class HibernateUtil {
         if (sessionFactory != null)
             sessionFactory.close();
     }
+
+    public static void addObject(Empleado emp) {
+        Session session = HibernateUtil.getCurrentSession();
+        session.beginTransaction();
+        session.save(emp);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+
 }
