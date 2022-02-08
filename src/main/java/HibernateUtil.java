@@ -1,3 +1,5 @@
+import databaseTables.Departamento;
+import databaseTables.Empleado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -6,6 +8,7 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
 import java.util.Properties;
+
 
 public class HibernateUtil {
 
@@ -30,10 +33,10 @@ public class HibernateUtil {
         Configuration configuration = new Configuration();
         configuration.setProperties(settings);
         configuration.configure();
+
         // Se registran las clases que hay que mapear con cada tabla de la base de datos
-        // configuration.addAnnotatedClass(Clase1.class);
-        // configuration.addAnnotatedClass(Clase2.class);
-        // configuration.addAnnotatedClass(Clase3.class);
+        configuration.addAnnotatedClass(Departamento.class);
+        configuration.addAnnotatedClass(Empleado.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
                 configuration.getProperties()).build();
@@ -52,10 +55,8 @@ public class HibernateUtil {
      * @return
      */
     public static Session getCurrentSession() {
-
         if ((session == null) || (!session.isOpen()))
             openSession();
-
         return session;
     }
 
@@ -63,11 +64,10 @@ public class HibernateUtil {
      * Cierra Hibernate
      */
     public static void closeSessionFactory() {
-
         if (session != null)
             session.close();
-
         if (sessionFactory != null)
             sessionFactory.close();
     }
+
 }
