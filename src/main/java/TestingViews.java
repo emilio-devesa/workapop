@@ -3,6 +3,8 @@ import org.hibernate.query.Query;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import databaseTables.*;
+
 
 public class TestingViews {
 
@@ -49,7 +51,7 @@ public class TestingViews {
      * @param empleado Instancia de la clase Empleado que será mostrada.
      */
     public void verSoloEmpleado(Empleado empleado) {
-        System.out.print(empleado.getEmpno() + " ");
+        System.out.print(empleado.getId() + " ");
         System.out.print(empleado.getEname() + "  ");
         System.out.print(empleado.getJob() + "  ");
         System.out.print(empleado.getMgr() + " ");
@@ -65,7 +67,7 @@ public class TestingViews {
      */
     public void verSoloDepartamento(Departamento departamento) {
         System.out.print(departamento.getNDepartamento() + "  ");
-        System.out.print(departamento.getDeptno() + "  ");
+        System.out.print(departamento.getId() + "  ");
         System.out.print(departamento.getLoc() + "  ");
     }
 
@@ -173,7 +175,7 @@ public class TestingViews {
         System.out.println("Buscando Jefe del empleado: " + empleado.getEname());
         if(empleado.getMgr() != null) {
             for (Empleado value : empleados) {
-                if (value.getEmpno() == empleado.getMgr()) {
+                if (value.getId() == empleado.getMgr().getId()) {
                     System.out.println("Busqueda exitosa!");
                     System.out.println(indiceEmpleado);
                     verSoloEmpleado(value);
@@ -194,13 +196,13 @@ public class TestingViews {
         ArrayList<Empleado> listaEmpleados = null;
         Empleado empleadoDevuelto = jefe; //Empleado devuelto de la lista obtenida, será en el que se posicione el usuario.
         boolean bool;
-        System.out.println("Buscando empleados de: " + jefe.getEmpno());
+        System.out.println("Buscando empleados de: " + jefe.getId());
         System.out.print("   "); //Meramente decorativo
         System.out.println(indiceEmpleado);
 
         //Lista todos los empleados del "jefe"
         for (Empleado empleado : empleados) {
-            if (jefe.getEmpno() == empleado.getMgr()) {
+            if (jefe.getId() == empleado.getMgr().getId()) {
                 listaEmpleados.add(empleado);
                 System.out.println((listaEmpleados.indexOf(empleado)+1)+")");
                 verSoloEmpleado(empleado);
@@ -230,7 +232,7 @@ public class TestingViews {
     private Empleado buscarEmpleadoPorNumero(int NoEmpleado) {
         System.out.println("Buscando al empleado número: " + NoEmpleado);
         for (Empleado empleado : empleados) {
-            if (empleado.getEmpno() == NoEmpleado) {
+            if (empleado.getId() == NoEmpleado) {
                 System.out.println("Empleado encontrado con exito.");
                 return empleado;
             }

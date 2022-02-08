@@ -4,7 +4,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://worka-pop.cupvh1a2vlwz.eu-west-1.rds.amazonaws.com/</property>
+        <property name="hibernate.connection.url">jdbc:mysql://worka-pop.cupvh1a2vlwz.eu-west-1.rds.amazonaws.com/WorkaPOP?useSSL=false&amp;autoReconnect=true</property>
         <property name="hibernate.connection.username">admin</property>
         <property name="hibernate.connection.password">WorkaPOP1234!</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
