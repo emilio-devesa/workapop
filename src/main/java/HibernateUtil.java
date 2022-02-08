@@ -1,3 +1,4 @@
+
 import databaseTables.Departamento;
 import databaseTables.Empleado;
 import org.hibernate.Session;
@@ -70,4 +71,14 @@ public class HibernateUtil {
             sessionFactory.close();
     }
 
+    public static void addObject(Empleado emp) {
+        Session session = HibernateUtil.getCurrentSession();
+        session.beginTransaction();
+        session.save(emp);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+
 }
+

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import databaseTables.*;
+import database.Empleado;
+import database.Departamento;
 
 
 public class TestingViews {
