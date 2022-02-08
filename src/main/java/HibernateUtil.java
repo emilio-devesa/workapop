@@ -1,6 +1,6 @@
 
-import databaseTables.Departamento;
-import databaseTables.Empleado;
+import database.Departamento;
+import database.Empleado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;

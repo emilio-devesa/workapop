@@ -3,7 +3,6 @@ import org.hibernate.query.Query;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import databaseTables.*;
 import database.Empleado;
 import database.Departamento;
 
