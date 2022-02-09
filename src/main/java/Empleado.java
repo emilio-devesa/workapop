@@ -1,7 +1,6 @@
-package database;
+import org.hibernate.Session;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -180,4 +179,22 @@ public class Empleado {
 
    //     HibernateUtil.addObject(emp);
     }
+
+    public void delete(){
+        Session sesion = HibernateUtil.getCurrentSession();
+        sesion.beginTransaction();
+        sesion.delete(this);
+        sesion.getTransaction().commit();
+        sesion.close();
+    }
+
+    public static Empleado getEmpleadoById(Integer id){
+        Session sesion= HibernateUtil.getCurrentSession();
+        sesion.beginTransaction();
+        Empleado emp=sesion.get(Empleado.class, id);
+        sesion.getTransaction().commit();
+        sesion.close();
+        return emp;
+    }
+
 }

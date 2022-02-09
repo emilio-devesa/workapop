@@ -3,9 +3,6 @@ import org.hibernate.query.Query;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import database.Empleado;
-import database.Departamento;
-
 
 public class TestingViews {
 
