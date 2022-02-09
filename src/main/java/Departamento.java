@@ -1,3 +1,5 @@
+import org.hibernate.Session;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -38,5 +40,15 @@ public class Departamento {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+
+    public static Departamento getDepartamentoById(Integer id){
+        Session sesion= HibernateUtil.getCurrentSession();
+        sesion.beginTransaction();
+        Departamento dpt=sesion.get(Departamento.class, id);
+        sesion.getTransaction().commit();
+        sesion.close();
+        return dpt;
     }
 }

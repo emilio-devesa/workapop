@@ -53,7 +53,7 @@ public class TestingViews {
         System.out.print(empleado.getEname() + "  ");
         System.out.print(empleado.getJob() + "  ");
         System.out.print(empleado.getMgr() + " ");
-        System.out.print(empleado.getHiredate() + " ");
+        System.out.print(empleado.getHireDate() + " ");
         System.out.print(empleado.getSal() + " ");
         System.out.print(empleado.getDeptno() + " ");
     }

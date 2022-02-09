@@ -68,16 +68,6 @@ public class HibernateUtil {
         if (sessionFactory != null)
             sessionFactory.close();
     }
-/*
-
-    public static void addObject(Empleado emp) {
-        Session session = HibernateUtil.getCurrentSession();
-        session.beginTransaction();
-        session.save(emp);
-        session.getTransaction().commit();
-        session.close();
-    }
-*/
 
 
 }
