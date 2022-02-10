@@ -43,19 +43,19 @@ public class Main {
     }
 
     public static void insertEmpleado(){
-        Empleado emp=null, mgr=null;
+        Empleado emp, mgr=null;
         Integer empno=null;
         String name, job;
         LocalDate hireDate=null;
         Double sal=null;
-        Departamento dpt=null;
+        Departamento dpt;
         do {
             try {
                 System.out.print("ID de empleado: "); empno=Integer.parseInt(input.nextLine());
             } catch (NumberFormatException nfe){
                 System.out.println("Formato no válido");
             }
-        } while (emp==null);
+        } while (empno==null);
         do {
             System.out.print("Nombre (max 30 caracteres): "); name=input.nextLine();
         } while (name.length()>30);
