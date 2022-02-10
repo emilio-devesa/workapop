@@ -1,18 +1,22 @@
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Objects;
 import java.util.Scanner;
 
 
 public class TestingViews {
 
     final String indiceEmpleado = "Número    Nombre    Trabajo    Trabaja para    Data de contratación    Salario    Departamento";
+    final String indiceDepartamento = "Número    Nombre    Localización";
 
     private ArrayList<Empleado> empleados;
+    private ArrayList<Departamento> departamentos;
     private final Scanner scanner = new Scanner(System.in);
 
     /**
-     * En caso de que no se hayan cargado todavía los datos de Empleado de la base de datos los solicitará.
+     * En caso de que no se hayan cargado todavía los datos de Empleado de la base de datos serán solicitados.
      * Si ya existen datos cargados preguntará si se desean actualizar, en caso afirmativo borrará los datos actuales y volverá a solicitarlos.
      */
     private void cargarEmpleados() {
@@ -34,13 +38,25 @@ public class TestingViews {
     }
 
     /**
-     * Crea una query manejada por HibernateUtil para solicitar un ArrayList con todos los "departamentos" de la base de datos.
-     *
-     * @return Devuelve el ArrayList solicitado.
+     * En caso de que no se hayan cargado todavía los datos de Departamento de la base de datos serán solicitados.
+     * Si ya existen datos cargados preguntará si se desean actualizar, en caso afirmativo borrará los datos actuales y volverá a solicitarlos.
      */
-    public ArrayList<Departamento> cargarDepartamentos() {
-        Query query = HibernateUtil.getCurrentSession().createQuery("FROM DEPT");
-        return (ArrayList<Departamento>) query.list();
+    public void cargarDepartamentos() {
+        if (departamentos == null) {
+            System.out.println("Solicitando datos de departamento...");
+            Query query = HibernateUtil.getCurrentSession().createQuery("FROM DEPT ");
+            departamentos = (ArrayList<Departamento>) query.list();
+            System.out.println("Los se han obtenido exitosamente.");
+        } else {
+            System.out.println("Ya existen datos cargados, quieres actualizarlos? ('si' para confirmar)");
+            if (scanner.nextLine().equalsIgnoreCase("si")) {
+                departamentos = null;
+                cargarDepartamentos();
+            } else {
+                System.out.println("Procediendo a mostrar los datos...");
+            }
+
+        }
     }
 
     /**
@@ -89,31 +105,29 @@ public class TestingViews {
      * mediante repetidas llamadas a verSoloDepartamento().
      */
     public void verDepartamentos() {
-        ArrayList<Departamento> departamento = cargarDepartamentos();
+        cargarDepartamentos();
         System.out.println("************************************************************************************************************");
         System.out.println();
-        System.out.println("Número    Nombre    Localización");
-        for (Departamento value : departamento) {
+        System.out.println(indiceDepartamento);
+        for (Departamento value : departamentos) {
             verSoloDepartamento(value);
         }
     }
-
-    //Todos los métodos siguientes sirven para gestionar mostrarRelacionJefeEmpleado()
 
     /**
      * Submenu que deja al usuario irse "posicionando" en los empleados para ir mostrando su jefe
      * o empleados de los que esta a cargo. Una vez mostrado una de las opciónes se posicionará en un nuevo
      * ya sea el jefe o una de las personas que tiene a cargo el empleado en el que estaba posicionado.
      * Este método trata de dejar al usuario ver la relación de empleado-jefe movimiendose por un
-     * "esquema en arból".
-     * Esto realmente no almacena los datos de ningúna manera especial, tan solo simula hacerlo de modo que es bastante
+     * "esquema en árbol".
+     * Esto realmente no almacena los datos de ninguna manera especial, tan solo simula hacerlo de modo que es bastante
      * ineficiente en cuanto al procesamiento de estos y no sería factible si la base de datos constase de un gran tamaño.
      */
-    public void mostrarRelacionJefeEmpleados() {
+    public void mostrarRelacionJefeEmpleados() throws InputMismatchException{
+
         cargarEmpleados();
-        ArrayList<Empleado> auxEmpleados = empleados;
         Empleado empleadoActual;
-        int option = 0;
+
         System.out.println("A continuación se irán mostrando la relación empleado-jefe a modo de árbol.");
         System.out.println("Puede irse moviendo por él introduciendo una de las opciónes o saltando directamente a un empleado concreto.");
 
@@ -122,21 +136,25 @@ public class TestingViews {
         do {
             System.out.print("Introduzca el número de algún empleado: ");
             empleadoActual = buscarEmpleadoPorNumero(scanner.nextInt());
-        }while(empleadoActual!=null);
+        }while(empleadoActual==null);
 
         //Trabajando con el árbol de empleados
-        //Aunque se denomine arbol el usuario puede introducir cualquier id y posicionarse en esta.
+        //Aunque se denomine árbol el usuario puede introducir cualquier id y posicionarse en esta.
         do {
             System.out.println("Empleado actual: ");
             System.out.println(empleadoActual.getEname());
             System.out.println();
-            System.out.println("Que desea hacer?");
-            System.out.println("1. Mostrar jefe.");
-            System.out.println("2. Mostrar empleados.");
-            System.out.println("3. Posicionarse en otro usuario");
-            System.out.println("4. Salir");
-            System.out.println();
-            System.out.println("Introduzca una opción: ");
+            System.out.print(
+                    """
+                    Que desea hacer?
+                    1. Mostrar jefe.
+                    2. Mostrar empleados.
+                    3. Buscar otro empleado.
+                    4. Salir.
+                    
+                    Introduzca una opción:
+                    """
+            );
 
             switch (scanner.nextInt()){
                 case 1:
@@ -163,18 +181,20 @@ public class TestingViews {
         }while (empleadoActual != null);
     }
 
+    //Todos los métodos siguientes sirven para gestionar mostrarRelacionJefeEmpleado()
+
     /**
      * Consulta la relación de los empleados para devolver el "jefe" del "empleado" pasado como parámetro, de momento es solo
      * llamado dentro del método mostrarRelacionJefeEmpleado().
      * @param empleado instancia de la clase Empleado, hace referencia al empleadoActual del método mostrarRelacionJefeEmpleado().
-     * @return Devoverá el "jefe" del "empleado" pásado como parámetro o, en caso de no existir este, el propio parámetro introducido de nuevo.
+     * @return Devolverá el "jefe" del "empleado" pasado como parámetro o, en caso de no existir este, el propio parámetro introducido de nuevo.
      */
     private Empleado buscarJefeDe(Empleado empleado) {
         System.out.println("Buscando Jefe del empleado: " + empleado.getEname());
         if(empleado.getMgr() != null) {
             for (Empleado value : empleados) {
-                if (value.getId() == empleado.getMgr().getId()) {
-                    System.out.println("Busqueda exitosa!");
+                if (Objects.equals(value.getId(), empleado.getMgr().getId())) {
+                    System.out.println("Búsqueda exitosa!");
                     System.out.println(indiceEmpleado);
                     verSoloEmpleado(value);
                     return value;
@@ -191,7 +211,7 @@ public class TestingViews {
      * @return Devolverá un empleado elegido por el usuario de entre todos de los que el "jefe está a cargo".
      */
     private Empleado buscarEmpleadosDe(Empleado jefe) {
-        ArrayList<Empleado> listaEmpleados = null;
+        ArrayList<Empleado> listaEmpleados = new ArrayList<>();
         Empleado empleadoDevuelto = jefe; //Empleado devuelto de la lista obtenida, será en el que se posicione el usuario.
         boolean bool;
         System.out.println("Buscando empleados de: " + jefe.getId());
@@ -200,7 +220,7 @@ public class TestingViews {
 
         //Lista todos los empleados del "jefe"
         for (Empleado empleado : empleados) {
-            if (jefe.getId() == empleado.getMgr().getId()) {
+            if (Objects.equals(jefe.getId(), empleado.getMgr().getId())) {
                 listaEmpleados.add(empleado);
                 System.out.println((listaEmpleados.indexOf(empleado)+1)+")");
                 verSoloEmpleado(empleado);
@@ -223,7 +243,7 @@ public class TestingViews {
     }
 
     /**
-     * Busca y retorna a un empleado de la lista empleados.
+     * Busca y retorna a un empleado de la lista "empleados".
      * @param NoEmpleado número único de cada empleado para identificarlo.
      * @return Devuelve una instancia de la clase Empleado.
      */
@@ -231,7 +251,7 @@ public class TestingViews {
         System.out.println("Buscando al empleado número: " + NoEmpleado);
         for (Empleado empleado : empleados) {
             if (empleado.getId() == NoEmpleado) {
-                System.out.println("Empleado encontrado con exito.");
+                System.out.println("Empleado encontrado con éxito.");
                 return empleado;
             }
         }

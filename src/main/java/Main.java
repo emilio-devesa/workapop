@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static Scanner input=new Scanner(System.in);
+    private static final Scanner input=new Scanner(System.in);
 
     public static void main(String[] args){
         try {
@@ -18,13 +18,14 @@ public class Main {
     public static void menu(){
         boolean exit=false;
         do{
-            System.out.print("WorkaPOP\n"+
-                    "1. Insertar empleado\n"+
-                    "2. Borrar empleado\n"+
-                    "3. Listar empleados\n"+
-                    "4. Listar departamentos\n"+
-                    "0. Salir\n"+
-                    "Opcion?: ");
+            System.out.print("""
+                    WorkaPOP
+                    1. Insertar empleado
+                    2. Borrar empleado
+                    3. Listar empleados
+                    4. Listar departamentos
+                    0. Salir
+                    Opcion?:""");
             try {
                 int option=Integer.parseInt(input.nextLine());
                 switch(option){
