@@ -1,5 +1,4 @@
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -7,7 +6,7 @@ import java.util.ArrayList;
 
 
 @Entity
-@Table(name = "EMP")
+@Table(name = "EMP", catalog="WorkaPOP")
 public class Empleado {
     @Id
     @Column(name = "EMPNO", nullable = false)
@@ -37,7 +36,7 @@ public class Empleado {
         // Empty constructor, required by Hibernate
     }
 
-    public Empleado(Integer id, String ename, String job, Empleado mgr, LocalDate hireDate, Double salEmo, Departamento dept) {
+    public Empleado(Integer id, String ename, String job, Empleado mgr, LocalDate hireDate, Double sal, Departamento dept) {
         this.id=id;
         this.ename=ename;
         this.job=job;
@@ -104,17 +103,7 @@ public class Empleado {
     }
 
     public static Empleado getEmpleadoById(Integer id){
-        Query query = HibernateUtil.getCurrentSession().createQuery("FROM EMP ");
-        ArrayList<Empleado> list = (ArrayList<Empleado>) query.list();
-        Empleado empleado=null;
-        for (Empleado e: list) if (e.getId()==id) empleado=e;
-        return empleado;
-        // **** Método anterior ****
-        // Session sesion= HibernateUtil.getCurrentSession();
-        // sesion.beginTransaction();
-        // Empleado emp=sesion.get(Empleado.class, id);
-        // sesion.getTransaction().commit();
-        // sesion.close();
+        return (Empleado) HibernateUtil.getCurrentSession().get(Empleado.class, id);
     }
 
     public void save(){
@@ -131,6 +120,11 @@ public class Empleado {
         sesion.delete(this);
         sesion.getTransaction().commit();
         sesion.close();
+    }
+
+    public static ArrayList<Empleado> listAll(){
+        Query query = HibernateUtil.getCurrentSession().createQuery("FROM Empleado");
+        return (ArrayList<Empleado>) ((org.hibernate.query.Query<?>) query).list();
     }
 
 }
