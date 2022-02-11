@@ -1,9 +1,11 @@
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "DEPT")
@@ -13,7 +15,7 @@ public class Departamento {
     private Integer id;
 
     @Column(name = "NDepartamento", length = 15)
-    private static String nDepartamento;
+    private String nDepartamento;
 
     @Column(name = "LOC", length = 14)
     private String loc;
@@ -50,5 +52,10 @@ public class Departamento {
         sesion.getTransaction().commit();
         sesion.close();
         return dpt;
+    }
+
+    public static ArrayList<Departamento> listAll(){
+        Query query = HibernateUtil.getCurrentSession().createQuery("FROM Departamento");
+        return (ArrayList<Departamento>) query.list();
     }
 }
