@@ -33,7 +33,7 @@ public class Main {
                     case 1: insertEmpleado(); break;
                     case 2: deleteEmpleado(); break;
                     case 3: listEmpleados(); break;
-                    case 4: (new Views()).verDepartamentos(); break;
+                    case 4: listDepartamentos(); break;
                     case 0: exit=true; break;
                     default: System.out.println("Opcion no válida"); break;
                 }
@@ -106,8 +106,7 @@ public class Main {
     }
 
     public static void listEmpleados(){
-        final String indiceEmpleado = "ID \t Nombre \t Puesto de trabajo \t Manager \t Fecha de contratación \t Salario \t Departamento";
-        System.out.println(indiceEmpleado);
+        System.out.println("ID \t Nombre \t Puesto \t Manager \t Contratación \t Salario \t Departamento");
         ArrayList<Empleado> list=Empleado.listAll();
         for (Empleado e: list){
             System.out.print(e.getId() + " \t");
@@ -117,6 +116,16 @@ public class Main {
             System.out.print(e.getHireDate() + " \t");
             System.out.print(e.getSal() + " \t");
             System.out.print(e.getDeptno() + "\n");
+        }
+    }
+
+    public static void listDepartamentos(){
+        System.out.println("ID \t Nombre \t Localización");
+        ArrayList<Departamento> list=Departamento.listAll();
+        for (Departamento d: list){
+            System.out.print(d.getId()+" \t");
+            System.out.print(d.getNDepartamento()+" \t");
+            System.out.print(d.getLoc()+" \n");
         }
     }
 
