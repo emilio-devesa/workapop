@@ -22,7 +22,7 @@ public class TestingViews {
     private void cargarEmpleados() {
         if (empleados == null) {
             System.out.println("Solicitando datos de empleados...");
-            Query query = HibernateUtil.getCurrentSession().createQuery("FROM EMP ");
+            Query query = HibernateUtil.getCurrentSession().createQuery("FROM EMP");
             empleados = (ArrayList<Empleado>) query.list();
             System.out.println("Los se han obtenido exitosamente.");
         } else {
