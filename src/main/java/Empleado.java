@@ -1,6 +1,9 @@
 import org.hibernate.Session;
+import org.hibernate.query.Query;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 
 @Entity
@@ -101,12 +104,17 @@ public class Empleado {
     }
 
     public static Empleado getEmpleadoById(Integer id){
-        Session sesion= HibernateUtil.getCurrentSession();
-        sesion.beginTransaction();
-        Empleado emp=sesion.get(Empleado.class, id);
-        sesion.getTransaction().commit();
-        sesion.close();
-        return emp;
+        Query query = HibernateUtil.getCurrentSession().createQuery("FROM EMP ");
+        ArrayList<Empleado> list = (ArrayList<Empleado>) query.list();
+        Empleado empleado=null;
+        for (Empleado e: list) if (e.getId()==id) empleado=e;
+        return empleado;
+        // **** Método anterior ****
+        // Session sesion= HibernateUtil.getCurrentSession();
+        // sesion.beginTransaction();
+        // Empleado emp=sesion.get(Empleado.class, id);
+        // sesion.getTransaction().commit();
+        // sesion.close();
     }
 
     public void save(){
@@ -124,6 +132,5 @@ public class Empleado {
         sesion.getTransaction().commit();
         sesion.close();
     }
-
 
 }
