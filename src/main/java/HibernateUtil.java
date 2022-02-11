@@ -21,7 +21,7 @@ public class HibernateUtil {
         // Hibernate settings equivalent to hibernate.cfg.xml's properties
         Properties settings = new Properties();
         settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-        settings.put(Environment.URL, "jdbc:mysql://worka-pop.cupvh1a2vlwz.eu-west-1.rds.amazonaws.com/");
+        settings.put(Environment.URL, "jdbc:mysql://worka-pop.cupvh1a2vlwz.eu-west-1.rds.amazonaws.com/WorkaPOP");
         settings.put(Environment.USER, "admin");
         settings.put(Environment.PASS, "WorkaPOP1234!");
         settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
