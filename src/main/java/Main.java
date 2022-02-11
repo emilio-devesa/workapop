@@ -54,7 +54,7 @@ public class Main {
             } catch (NumberFormatException nfe){
                 System.out.println("Formato no válido");
             }
-        } while (emp==null);
+        } while (empno==null);
         do {
             System.out.print("Nombre (max 30 caracteres): "); name=input.nextLine();
         } while (name.length()>30);
