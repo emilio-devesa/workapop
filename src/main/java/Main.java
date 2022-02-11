@@ -1,5 +1,6 @@
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -9,10 +10,10 @@ public class Main {
     public static void main(String[] args){
         try {
             HibernateUtil.buildSessionFactory();
-            menu();
         } catch (Throwable ex){
             System.out.println("No se pudo crear la sesión de conexión a la BBDD");
         }
+        menu();
     }
 
     public static void menu(){
@@ -25,14 +26,14 @@ public class Main {
                     3. Listar empleados
                     4. Listar departamentos
                     0. Salir
-                    Opcion?:""");
+                    Opcion?:  """);
             try {
                 int option=Integer.parseInt(input.nextLine());
                 switch(option){
                     case 1: insertEmpleado(); break;
                     case 2: deleteEmpleado(); break;
-                    case 3: break;
-                    case 4: break;
+                    case 3: listEmpleados(); break;
+                    case 4: (new Views()).verDepartamentos(); break;
                     case 0: exit=true; break;
                     default: System.out.println("Opcion no válida"); break;
                 }
@@ -46,7 +47,7 @@ public class Main {
         Empleado emp, mgr=null;
         Integer empno=null;
         String name, job;
-        LocalDate hireDate=null;
+        LocalDate hireDate=LocalDate.now();
         Double sal=null;
         Departamento dpt;
         do {
@@ -60,7 +61,7 @@ public class Main {
             System.out.print("Nombre (max 30 caracteres): "); name=input.nextLine();
         } while (name.length()>30);
         do {
-            System.out.print("Trabajo (max 9 caracteres): "); job=input.nextLine();
+            System.out.print("Puesto de trabajo (max 9 caracteres): "); job=input.nextLine();
         } while (job.length()>9);
         do {
             try{
@@ -101,6 +102,21 @@ public class Main {
             }
         } catch(NumberFormatException nfe){
             System.out.println("Formato de ID no válido");
+        }
+    }
+
+    public static void listEmpleados(){
+        final String indiceEmpleado = "ID \t Nombre \t Puesto de trabajo \t Manager \t Fecha de contratación \t Salario \t Departamento";
+        System.out.println(indiceEmpleado);
+        ArrayList<Empleado> list=Empleado.listAll();
+        for (Empleado e: list){
+            System.out.print(e.getId() + " \t");
+            System.out.print(e.getEname() + " \t");
+            System.out.print(e.getJob() + " \t");
+            System.out.print(e.getMgr() + " \t");
+            System.out.print(e.getHireDate() + " \t");
+            System.out.print(e.getSal() + " \t");
+            System.out.print(e.getDeptno() + "\n");
         }
     }
 
