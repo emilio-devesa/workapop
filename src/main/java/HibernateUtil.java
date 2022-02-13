@@ -1,4 +1,3 @@
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -8,7 +7,14 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.util.Properties;
 
-
+/**
+ * Una clase que permite la creación de sesiones de conexión a una BBDD a través de Hibernate ORM
+ * @author Alejandro Rey Fernández
+ * @author Emilio Devesa
+ * @author Miguel Alejandro Pita Prieto
+ * @author Adrián Brey Becerra
+ * @version 0.1
+ */
 public class HibernateUtil {
 
     private static SessionFactory sessionFactory;
@@ -26,17 +32,14 @@ public class HibernateUtil {
         settings.put(Environment.PASS, "WorkaPOP1234!");
         settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
         settings.put(Environment.SHOW_SQL, "true");
-        //settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+        settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
         //settings.put(Environment.HBM2DDL_AUTO, "create-drop");
-
         Configuration configuration = new Configuration();
         configuration.setProperties(settings);
         configuration.configure();
-
         // Se registran las clases que hay que mapear con cada tabla de la base de datos
         configuration.addAnnotatedClass(Departamento.class);
         configuration.addAnnotatedClass(Empleado.class);
-
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
                 configuration.getProperties()).build();
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
@@ -51,7 +54,7 @@ public class HibernateUtil {
 
     /**
      * Devuelve la sesión actual
-     * @return
+     * @return La sesión de conexión a la base de datos, a través de la cual hacer consultas
      */
     public static Session getCurrentSession() {
         if ((session == null) || (!session.isOpen()))
