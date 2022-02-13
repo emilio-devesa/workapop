@@ -7,6 +7,14 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.util.Properties;
 
+/**
+ * Una clase que permite la creación de sesiones de conexión a una BBDD a través de Hibernate ORM
+ * @author Alejandro Rey Fernández
+ * @author Emilio Devesa
+ * @author Miguel Alejandro Pita Prieto
+ * @author Adrián Brey Becerra
+ * @version 0.1
+ */
 public class HibernateUtil {
 
     private static SessionFactory sessionFactory;
@@ -19,22 +27,19 @@ public class HibernateUtil {
         // Hibernate settings equivalent to hibernate.cfg.xml's properties
         Properties settings = new Properties();
         settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-        settings.put(Environment.URL, "jdbc:mysql://worka-pop.cupvh1a2vlwz.eu-west-1.rds.amazonaws.com/");
+        settings.put(Environment.URL, "jdbc:mysql://worka-pop.cupvh1a2vlwz.eu-west-1.rds.amazonaws.com/WorkaPOP");
         settings.put(Environment.USER, "admin");
         settings.put(Environment.PASS, "WorkaPOP1234!");
         settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
         settings.put(Environment.SHOW_SQL, "true");
-        //settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+        settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
         //settings.put(Environment.HBM2DDL_AUTO, "create-drop");
-
         Configuration configuration = new Configuration();
         configuration.setProperties(settings);
         configuration.configure();
         // Se registran las clases que hay que mapear con cada tabla de la base de datos
-        // configuration.addAnnotatedClass(Clase1.class);
-        // configuration.addAnnotatedClass(Clase2.class);
-        // configuration.addAnnotatedClass(Clase3.class);
-
+        configuration.addAnnotatedClass(Departamento.class);
+        configuration.addAnnotatedClass(Empleado.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
                 configuration.getProperties()).build();
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
@@ -49,13 +54,11 @@ public class HibernateUtil {
 
     /**
      * Devuelve la sesión actual
-     * @return
+     * @return La sesión de conexión a la base de datos, a través de la cual hacer consultas
      */
     public static Session getCurrentSession() {
-
         if ((session == null) || (!session.isOpen()))
             openSession();
-
         return session;
     }
 
@@ -63,11 +66,12 @@ public class HibernateUtil {
      * Cierra Hibernate
      */
     public static void closeSessionFactory() {
-
         if (session != null)
             session.close();
-
         if (sessionFactory != null)
             sessionFactory.close();
     }
+
+
 }
+

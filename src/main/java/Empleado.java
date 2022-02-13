@@ -1,159 +1,184 @@
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.Scanner;
+import org.hibernate.Session;
 
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+/**
+ * Una clase que modela un empleado de una empresa.
+ * @author Alejandro Rey Fernández
+ * @author Emilio Devesa
+ * @author Miguel Alejandro Pita Prieto
+ * @author Adrián Brey Becerra
+ * @version 0.1
+ */
+@Entity
+@Table(name = "EMP", catalog="WorkaPOP")
 public class Empleado {
+    @Id
+    @Column(name = "EMPNO", nullable = false)
+    private Integer id;
 
-    private static Scanner input=new Scanner(System.in);
-
-    private int empno;
+    @Column(name = "ENAME", length = 10)
     private String ename;
+
+    @Column(name = "JOB", length = 9)
     private String job;
-    private int mgr;
-    private String hiredate;
-    private double sal;
+
+    @ManyToOne
+    @JoinColumn(name = "MGR")
+    private Empleado mgr;
+
+    @Column(name = "HIREDATE")
+    private LocalDate hireDate;
+
+    @Column(name = "SAL")
+    private Double sal;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "DEPTNO", nullable = false)
     private Departamento deptno;
 
-    public Empleado(int empno, String ename, String job, int mgr, String hiredate, double sal, double comm, Departamento deptno) {
-        this.empno = empno;
-        this.ename = ename;
-        this.job = job;
-        this.mgr = mgr;
-        this.hiredate = hiredate;
-        this.sal = sal;
-        this.deptno = deptno;
+    public Empleado() {
     }
 
-    public int getEmpno() {
-        return empno;
+    public Empleado(Integer id, String ename, String job, Empleado mgr, LocalDate hireDate, Double sal, Departamento dept) {
+        this.id=id;
+        this.ename=ename;
+        this.job=job;
+        this.mgr=mgr;
+        this.hireDate=hireDate;
+        this.sal=sal;
+        this.deptno=dept;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getEname() {
         return ename;
     }
 
+    public void setEname(String ename) {
+        this.ename = ename;
+    }
+
     public String getJob() {
         return job;
-    }
-
-    public int getMgr() {
-        return mgr;
-    }
-
-    public String getHiredate() {
-        return hiredate;
-    }
-
-    public double getSal() {
-        return sal;
-    }
-
-    public Departamento getDeptno() {
-        return deptno;
-    }
-
-    public void setEmpno(int empno) {
-        this.empno = empno;
-    }
-
-    public void setename(String ename) {
-        this.ename = ename;
     }
 
     public void setJob(String job) {
         this.job = job;
     }
 
-    public void setMgr(int mgr) {
+    public Empleado getMgr() {
+        return mgr;
+    }
+
+    public void setMgr(Empleado mgr) {
         this.mgr = mgr;
     }
 
-    public void setHiredate(String hiredate) {
-        this.hiredate = hiredate;
+    public LocalDate getHireDate() {
+        return hireDate;
     }
 
-    public void setSal(double sal) {
+    public void setHireDate(LocalDate hireDate) {
+        this.hireDate = hireDate;
+    }
+
+    public Double getSal() {
+        return sal;
+    }
+
+    public void setSal(Double sal) {
         this.sal = sal;
+    }
+
+    public Departamento getDeptno() {
+        return deptno;
     }
 
     public void setDeptno(Departamento deptno) {
         this.deptno = deptno;
     }
 
-
-    public static String readAttr(int option){
-        switch(option) {
-            case 0: { System.out.print("Codigo empleado? "); break; }
-            case 1: { System.out.print("Nombre empleado? "); break; }
-            case 2: { System.out.print("Trabajo empleado? "); break; }
-            case 3: { System.out.print("Codigo jefe empleado? "); break; }
-            case 4: { System.out.print("Fecha de contrato empleado? "); break;}
-            case 5: { System.out.print("Salario empleado? "); break;}
-            case 6: { System.out.print("Departamento? "); break;}
+    @Override
+    public String toString(){
+        String s="";
+        s+=this.getId() + " \t";
+        s+=this.getEname() + " \t";
+        s+=this.getJob() + " \t";
+        if (this.getMgr()==null){
+            s+=0;
+        }else {
+            s+=this.getMgr().getId()+ " \t";
         }
-        return input.nextLine();
+        s+=this.getHireDate() + " \t";
+        s+=this.getSal() + " \t";
+        s+=this.getDeptno();
+        return s;
     }
 
-    public static void insert() {
-        boolean vv = false;
-            while(!vv) {
-                try {
-                    int codEmp = Integer.valueOf(readAttr(0));
-                    vv=true;
-                } catch (NumberFormatException NFE) {
-                    System.out.println("Debes introducir un número");
-                }
-            }
-            vv = false;
-
-            while(!vv){
-                String nomEmp = readAttr(1);
-                if (nomEmp.length()<=10){
-                    vv=true;
-                }
-                else{
-                    System.out.println("el nombre es demasiado largo");
-                }
-            }
-            vv = false;
-
-            while(!vv){
-                String trbEmp = readAttr(2);
-                if (trbEmp.length()<=9){
-                    vv=true;
-                }
-                else {
-                    System.out.println("El nombre del trabajo es demasiado largo");
-                }
-            }
-            vv = false;
-
-            while(!vv) {
-                try {
-                    int jefEmp = Integer.valueOf(readAttr(3));
-                    vv=true;
-                } catch (NumberFormatException NFE) {
-                    System.out.println("Debes introducir un número");
-                }
-            }
-            vv = false;
-            while(!vv) {
-                try {
-                    int salEmo = Integer.valueOf(readAttr(5));
-                    vv=true;
-                } catch (NumberFormatException NFE) {
-                    System.out.println("Debes introducir un número");
-                }
-            }
-            vv = false;
-
-            while(!vv) {
-                try{
-                    int codDep = Integer.valueOf(readAttr(6));
-                    vv=true;
-                }catch (NumberFormatException NFE) {
-                    System.out.println("Debes introducir un número");
-                }
-            }
-
+    /**
+     * Saves the Empleado object in the database
+     */
+    public void save(){
+        Session sesion = HibernateUtil.getCurrentSession();
+        sesion.beginTransaction();
+        sesion.save(this);
+        sesion.getTransaction().commit();
+        sesion.close();
     }
+
+    /**
+     * Deletes this Empleado object from the database
+     */
+    public void delete(){
+        Session sesion = HibernateUtil.getCurrentSession();
+        sesion.beginTransaction();
+        sesion.delete(this);
+        sesion.getTransaction().commit();
+        sesion.close();
+    }
+
+    /**
+     * Returns an object of class Empleado, selected by ID from the DB
+     * @param id Integer representing an object unique ID
+     * @return Object from class Empleado with the requested ID or null if it doesn't exist
+     */
+    public static Empleado getEmpleadoById(Integer id){
+        return (Empleado) HibernateUtil.getCurrentSession().get(Empleado.class, id);
+    }
+
+    /**
+     * Returns all objects from class Empleado in the database
+     * @return A new collection of type ArrayList containing all objects of class Empleado in the database
+     */
+    public static ArrayList<Empleado> getAll(){
+        Query query = HibernateUtil.getCurrentSession().createQuery("FROM Empleado");
+        return (ArrayList<Empleado>) ((org.hibernate.query.Query<?>) query).list();
+    }
+
+    /**
+     * Returns all objects from class Empleado in the database that have a specified manager
+     * @param manager A object of class Empleado that is manager of the objects that will be returned
+     * @return A new collection of type ArrayList containing all objects of class Empleado in the database that have a specific manager
+     */
+    public static ArrayList<Empleado> getEmpleadosFromManager(Empleado manager){
+        ArrayList<Empleado> listaEmpleados=getAll();
+        ArrayList<Empleado> empleadosFromManager=new ArrayList<Empleado>();
+        for (Empleado e: listaEmpleados){
+            if (e.getMgr()==manager) {
+                empleadosFromManager.add(e);
+            }
+        }
+        return empleadosFromManager;
+    }
+
 }
