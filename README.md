@@ -1,4 +1,4 @@
-# Workapop
+# WorkaPOP
 
 ## Objetivo
 Crear un programa de gestión de los trabajadores donde el usuario puede Insertar, Borrar o listar los empleados registrados y, a mayores, listar también los departamentos existentes en la empresa. Cada empleado tendrá su código de empleado, nombre, puesto de trabajo, código de persona a cargo, fecha de contratación, salario y departamento asignados a su ficha. 
