@@ -7,6 +7,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.ArrayList;
 
+/**
+ * Una clase que modela un departamento de una empresa.
+ * @author Alejandro Rey Fernández
+ * @author Emilio Devesa
+ * @author Miguel Alejandro Pita Prieto
+ * @author Adrián Brey Becerra
+ * @version 0.1
+ */
 @Entity
 @Table(name = "DEPT")
 public class Departamento {
@@ -44,7 +52,20 @@ public class Departamento {
         this.id = id;
     }
 
+    @Override
+    public String toString(){
+        String s="";
+        s+=this.getId()+" \t";
+        s+=this.getNDepartamento()+" \t";
+        s+=this.getLoc();
+        return s;
+    }
 
+    /**
+     * Returns an object of class Departamento, selected by ID from the DB
+     * @param id Integer representing an object unique ID
+     * @return Object from class Departamento with the requested ID or null if it doesn't exist
+     */
     public static Departamento getDepartamentoById(Integer id){
         Session sesion= HibernateUtil.getCurrentSession();
         sesion.beginTransaction();
@@ -54,7 +75,11 @@ public class Departamento {
         return dpt;
     }
 
-    public static ArrayList<Departamento> listAll(){
+    /**
+     * Returns all objects from class Departamento in the database
+     * @return A new collection of type ArrayList containing all objects of class Departamento in the database
+     */
+    public static ArrayList<Departamento> getAll(){
         Query query = HibernateUtil.getCurrentSession().createQuery("FROM Departamento");
         return (ArrayList<Departamento>) query.list();
     }
