@@ -4,7 +4,14 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
+/**
+ * Una clase que modela un empleado de una empresa.
+ * @author Alejandro Rey Fernández
+ * @author Emilio Devesa
+ * @author Miguel Alejandro Pita Prieto
+ * @author Adrián Brey Becerra
+ * @version 0.1
+ */
 @Entity
 @Table(name = "EMP", catalog="WorkaPOP")
 public class Empleado {
@@ -32,8 +39,7 @@ public class Empleado {
     @JoinColumn(name = "DEPTNO", nullable = false)
     private Departamento deptno;
 
-    protected Empleado(){
-        // Empty constructor, required by Hibernate
+    public Empleado() {
     }
 
     public Empleado(Integer id, String ename, String job, Empleado mgr, LocalDate hireDate, Double sal, Departamento dept) {
@@ -102,10 +108,26 @@ public class Empleado {
         this.deptno = deptno;
     }
 
-    public static Empleado getEmpleadoById(Integer id){
-        return (Empleado) HibernateUtil.getCurrentSession().get(Empleado.class, id);
+    @Override
+    public String toString(){
+        String s="";
+        s+=this.getId() + " \t";
+        s+=this.getEname() + " \t";
+        s+=this.getJob() + " \t";
+        if (this.getMgr()==null){
+            s+=0;
+        }else {
+            s+=this.getMgr().getId()+ " \t";
+        }
+        s+=this.getHireDate() + " \t";
+        s+=this.getSal() + " \t";
+        s+=this.getDeptno();
+        return s;
     }
 
+    /**
+     * Saves the Empleado object in the database
+     */
     public void save(){
         Session sesion = HibernateUtil.getCurrentSession();
         sesion.beginTransaction();
@@ -114,6 +136,9 @@ public class Empleado {
         sesion.close();
     }
 
+    /**
+     * Deletes this Empleado object from the database
+     */
     public void delete(){
         Session sesion = HibernateUtil.getCurrentSession();
         sesion.beginTransaction();
@@ -122,9 +147,38 @@ public class Empleado {
         sesion.close();
     }
 
-    public static ArrayList<Empleado> listAll(){
+    /**
+     * Returns an object of class Empleado, selected by ID from the DB
+     * @param id Integer representing an object unique ID
+     * @return Object from class Empleado with the requested ID or null if it doesn't exist
+     */
+    public static Empleado getEmpleadoById(Integer id){
+        return (Empleado) HibernateUtil.getCurrentSession().get(Empleado.class, id);
+    }
+
+    /**
+     * Returns all objects from class Empleado in the database
+     * @return A new collection of type ArrayList containing all objects of class Empleado in the database
+     */
+    public static ArrayList<Empleado> getAll(){
         Query query = HibernateUtil.getCurrentSession().createQuery("FROM Empleado");
         return (ArrayList<Empleado>) ((org.hibernate.query.Query<?>) query).list();
+    }
+
+    /**
+     * Returns all objects from class Empleado in the database that have a specified manager
+     * @param manager A object of class Empleado that is manager of the objects that will be returned
+     * @return A new collection of type ArrayList containing all objects of class Empleado in the database that have a specific manager
+     */
+    public static ArrayList<Empleado> getEmpleadosFromManager(Empleado manager){
+        ArrayList<Empleado> listaEmpleados=getAll();
+        ArrayList<Empleado> empleadosFromManager=new ArrayList<Empleado>();
+        for (Empleado e: listaEmpleados){
+            if (e.getMgr()==manager) {
+                empleadosFromManager.add(e);
+            }
+        }
+        return empleadosFromManager;
     }
 
 }
